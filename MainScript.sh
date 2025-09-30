@@ -2,9 +2,8 @@ echo "Введите путь до папки /log"
 read dir_path
 
 if [ -e "$dir_path" ]; then
-    echo "Путь существует: $dir_path"
+    echo "Путь обработан"
 else
-    echo "Путь не существует: $dir_path"
     until [[ -e "$dir_path" ]]; do
         echo "Вы ввели нерпавильный путь, введите его заново"
         read dir_path
