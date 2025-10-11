@@ -22,11 +22,11 @@ done
 echo "Valid path: $dir_path"
 
 
-echo "Enter the size limit in MB (between 16 and 1000):"
+echo "Enter the size limit in MiB (between 16 and 1000):"
 read size_mb
 
 until [[ "$size_mb" =~ ^[0-9]+$ ]] && [[ "$size_mb" -ge 16 ]] && [[ "$size_mb" -le 1000 ]]; do
-    echo "Size must be an integer between 16 and 1000 MB."
+    echo "Size must be an integer between 16 and 1000"
     read size_mb
 done
 
@@ -56,7 +56,7 @@ fi
 img_file="$img_storage_path/limiter_$(basename "$dir_path").img"
 
 echo "Creating image file: $img_file ($img_size_mb MB)"
-dd if=/dev/zero of="$img_file" bs=1MB count="$img_size_mb" || { echo "Failed to create image file"; exit 1; }
+dd if=/dev/zero of="$img_file" bs=1M count="$img_size_mb" || { echo "Failed to create image file"; exit 1; }
 
 sudo mkfs.ext4 "$img_file" -F -m 0 -i 16384 -J size=$journal_mb || { echo "Failed to format image"; exit 1; }
 sudo mount -o loop "$img_file" "$dir_path" || { echo "Failed to mount image"; exit 1; }
@@ -64,13 +64,13 @@ sudo mount -o loop "$img_file" "$dir_path" || { echo "Failed to mount image"; ex
 current_user=$(whoami)
 sudo chown -R "$current_user:$current_user" "$dir_path" || { echo "Failed to set permissions"; exit 1; }
 
-avail_size=$(df -H --output=avail "$dir_path" | tail -1 | sed 's/ //g')
+avail_size=$(df -h --output=avail "$dir_path" | tail -1 | sed 's/ //g')
 fstab_entry="$img_file $dir_path ext4 loop,defaults,uid=$(id -u),gid=$(id -g) 0 2 # avail=$avail_size"
 echo "$fstab_entry" | sudo tee -a /etc/fstab || { echo "Failed to update /etc/fstab"; exit 1; }
 
 
-df -H "$dir_path"
-echo "Folder $dir_path is now limited to $avail_size MB."
+df -h "$dir_path"
+echo "Folder $dir_path is now limited to $avail_size MiB."
 
 #How to read a folder's size
 #dir_path=Your path
