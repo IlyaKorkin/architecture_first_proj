@@ -68,7 +68,7 @@ function Compress-FilesToSingleZip {
         Write-Host "Created backup folder: $backupFolder" -ForegroundColor Gray
     }
 
-    $zipPath = Join-Path $SourcePath "archived_files.zip"
+    $zipPath = Join-Path $backupFolder "archived_files.zip"
     
     $filesToArchivePaths = @()
     $totalSize = 0
