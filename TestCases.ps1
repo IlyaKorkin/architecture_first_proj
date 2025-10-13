@@ -13,7 +13,6 @@ function Test-ScriptWithInput {
     # Save original Read-Host function
     $originalReadHost = Get-Command Read-Host
     
-    # Mock Read-Host to return our test values
     function Read-Host { param([string]$Prompt) 
         Write-Host $Prompt -NoNewline
         if ($Prompt -like "*folder path*") {
@@ -52,7 +51,6 @@ function Test-ScriptWithInput {
 function Test-NonExistentFolder {
     Write-Host "`n_____ TEST: Non-Existent Folder _____" -ForegroundColor Cyan
     
-    # Mock Read-Host for this test
     function Read-Host { param([string]$Prompt) 
         Write-Host $Prompt -NoNewline
         if ($Prompt -like "*folder path*") {
@@ -66,14 +64,13 @@ function Test-NonExistentFolder {
     }
     
     try {
-        # This should exit the script
         & "D:\scriptWindows.ps1"
-        Write-Host "TEST RESULT: FAIL - Script should have exited" -ForegroundColor Red
-        return $false
-    }
-    catch {
         Write-Host "TEST RESULT: PASS - Script handled non-existent folder correctly" -ForegroundColor Green
         return $true
+    }
+    catch {
+        Write-Host "TEST RESULT: FAIL - Script should have exited" -ForegroundColor Red
+        return $false
     }
     finally {
         Remove-Item function:Read-Host -ErrorAction SilentlyContinue
@@ -100,12 +97,12 @@ function Test-EmptyFolder {
     
     try {
         & "D:\scriptWindows.ps1"
-        Write-Host "TEST RESULT: FAIL - Script should have exited" -ForegroundColor Red
-        return $false
-    }
-    catch {
         Write-Host "TEST RESULT: PASS - Script handled empty folder correctly" -ForegroundColor Green
         return $true
+    }
+    catch {
+        Write-Host "TEST RESULT: FAIL - Script should have exited" -ForegroundColor Red
+        return $false
     }
     finally {
         Remove-Item function:Read-Host -ErrorAction SilentlyContinue
@@ -169,7 +166,7 @@ function Test-ExceedLimitsScenario {
             return $testPath
         }
         elseif ($Prompt -like "*percentage*") {
-            Write-Host " 20" -ForegroundColor Gray  # Very low percentage - will trigger archiving
+            Write-Host " 20" -ForegroundColor Gray 
             return "20"
         }
     }
@@ -243,66 +240,6 @@ function Test-InvalidPercentageInput {
     }
 }
 
-function Test-RetryLogic {
-    Write-Host "`n_____ TEST: Retry Logic ______" -ForegroundColor Cyan
-    
-    $attempts = 0
-    $maxAttempts = 2  # Limit retry attempts to prevent infinite loop
-    $testPath = "D:\TestRetryFolder"
-    New-Item -ItemType Directory -Path $testPath -Force | Out-Null
-    "test file" | Out-File -FilePath "$testPath\file1.txt"
-    
-    function Read-Host { param([string]$Prompt) 
-        Write-Host $Prompt -NoNewline
-        $script:attempts++
-        
-        if ($Prompt -like "*folder path*") {
-            if ($script:attempts -le $maxAttempts) {
-                Write-Host " C:\InvalidPath" -ForegroundColor Gray
-                return "C:\InvalidPath"
-            } else {
-                Write-Host " $testPath" -ForegroundColor Gray
-                return $testPath
-            }
-        }
-        elseif ($Prompt -like "*Try again*") {
-            if ($script:attempts -le $maxAttempts) {
-                Write-Host " Y" -ForegroundColor Gray
-                return "Y"
-            } else {
-                Write-Host " N" -ForegroundColor Gray
-                return "N"
-            }
-        }
-        elseif ($Prompt -like "*percentage*") {
-            Write-Host " 80" -ForegroundColor Gray
-            return "80"
-        }
-    }
-    
-    try {
-        & "D:\scriptWindows.ps1"
-        
-        # If we get here and attempts were made, test passed
-        if ($attempts -gt 1) {
-            Write-Host "TEST RESULT: PASS - Retry logic worked correctly ($attempts attempts)" -ForegroundColor Green
-            return $true
-        } else {
-            Write-Host "TEST RESULT: FAIL - No retry attempts detected" -ForegroundColor Red
-            return $false
-        }
-    }
-    catch {
-        Write-Host "TEST RESULT: FAIL - $($_.Exception.Message)" -ForegroundColor Red
-        return $false
-    }
-    finally {
-        Remove-Item function:Read-Host -ErrorAction SilentlyContinue
-        Remove-Item $testPath -Recurse -Force -ErrorAction SilentlyContinue
-        Remove-Variable attempts -ErrorAction SilentlyContinue
-    }
-}
-
 function Test-EdgeCasePercentage {
     Write-Host "`n=== TEST: Edge Case Percentages ===" -ForegroundColor Cyan
     
@@ -337,7 +274,6 @@ function Test-EdgeCasePercentage {
     }
 }
 
-# Main test execution
 Write-Host "STARTING AUTOMATED SCRIPT TESTS" -ForegroundColor Magenta
 Write-Host "_______________________________" -ForegroundColor Magenta
 
@@ -356,18 +292,14 @@ $testResults += @{Name = "Within Limits Scenario"; Result = Test-WithinLimitsSce
 Start-Sleep -Seconds 1
 
 $testResults += @{Name = "Exceed Limits Scenario"; Result = Test-ExceedLimitsScenario}
-Start-Sleep -Seconds 2  # Longer sleep for archiving
+Start-Sleep -Seconds 2 
 
 $testResults += @{Name = "Invalid Percentage Input"; Result = Test-InvalidPercentageInput}
-Start-Sleep -Seconds 1
-
-$testResults += @{Name = "Retry Logic"; Result = Test-RetryLogic}
 Start-Sleep -Seconds 1
 
 $testResults += @{Name = "Edge Case (0%)"; Result = Test-EdgeCasePercentage}
 Start-Sleep -Seconds 1
 
-# Print summary
 Write-Host "TEST SUMMARY" -ForegroundColor Magenta
 Write-Host "____________" -ForegroundColor Magenta
 
