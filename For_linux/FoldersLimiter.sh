@@ -73,7 +73,7 @@ df -h "$dir_path"
 echo "Folder $dir_path is now limited to $avail_size MiB."
 
 real_size=$(df -m $dir_path | awk 'NR==2 {print $4}')
-echo "$real_size" > size.txt 
+echo "$real_size" > size_$(basename "$dir_path").txt 
 
 #How to read a folder's size
 #dir_path=Your path
