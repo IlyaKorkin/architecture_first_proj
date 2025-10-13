@@ -72,6 +72,9 @@ echo "$fstab_entry" | sudo tee -a /etc/fstab || { echo "Failed to update /etc/fs
 df -h "$dir_path"
 echo "Folder $dir_path is now limited to $avail_size MiB."
 
+real_size=$(df -m $dir_path | awk 'NR==2 {print $4}')
+echo "$real_size" > size.txt 
+
 #How to read a folder's size
 #dir_path=Your path
 #folder_size=$(grep "$dir_path" /etc/fstab | grep -o 'avail=[0-9]*' | sed 's/avail=//')
