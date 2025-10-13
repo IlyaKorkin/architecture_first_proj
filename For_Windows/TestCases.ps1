@@ -111,7 +111,7 @@ function Test-EmptyFolder {
 }
 
 function Test-WithinLimitsScenario {
-    Write-Host "`n=== TEST: Within Limits (No Archiving Needed) ===" -ForegroundColor Cyan
+    Write-Host "`n______ TEST: Within Limits (No Archiving Needed) ______" -ForegroundColor Cyan
     
     $testPath = "D:\TestWithinLimits"
     New-Item -ItemType Directory -Path $testPath -Force | Out-Null
@@ -148,7 +148,7 @@ function Test-WithinLimitsScenario {
 }
 
 function Test-ExceedLimitsScenario {
-    Write-Host "`n=== TEST: Exceed Limits (Archiving Required) ===" -ForegroundColor Cyan
+    Write-Host "`n______ TEST: Exceed Limits (Archiving Required) ______" -ForegroundColor Cyan
     
     $testPath = "D:\TestExceedLimits"
     New-Item -ItemType Directory -Path $testPath -Force | Out-Null
@@ -241,7 +241,7 @@ function Test-InvalidPercentageInput {
 }
 
 function Test-EdgeCasePercentage {
-    Write-Host "`n=== TEST: Edge Case Percentages ===" -ForegroundColor Cyan
+    Write-Host "`n=______ TEST: Edge Case Percentages ______" -ForegroundColor Cyan
     
     $testPath = "D:\TestEdgeCase"
     New-Item -ItemType Directory -Path $testPath -Force | Out-Null
