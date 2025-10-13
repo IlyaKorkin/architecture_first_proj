@@ -140,10 +140,55 @@ echo -e "${GREEN}================${NC}"
 # ===ТЕСТ 6===
 clean_files "$dir_path"
 creation 50 2 "$dir_path"
-echo -e "${GREEN}=====Тест_5=====${NC}"
+echo -e "${GREEN}=====Тест_6=====${NC}"
 ./"$program" << EOF
 $dir_path
 75
 3
 EOF
 echo -e "${GREEN}================${NC}"
+
+# ===ТЕСТ 7===
+clean_files "$dir_path"
+creation 5 11 "$dir_path"
+echo -e "${GREEN}=====Тест_7=====${NC}"
+./"$program" << EOF
+$dir_path
+80
+15
+EOF
+echo -e "${GREEN}================${NC}"
+
+# ===ТЕСТ 8===
+clean_files "$dir_path"
+creation 1 50 "$dir_path"
+echo -e "${GREEN}=====Тест_8=====${NC}"
+./"$program" << EOF
+$dir_path
+10
+30
+EOF
+echo -e "${GREEN}================${NC}"
+
+# ===ТЕСТ 9===
+clean_files "$dir_path"
+creation 10 3 "$dir_path"
+echo -e "${GREEN}=====Тест_9=====${NC}"
+./"$program" << EOF
+$dir_path
+60
+2
+EOF
+echo -e "${GREEN}================${NC}"
+
+# ===ТЕСТ 10===
+clean_files "$dir_path"
+creation 7 6 "$dir_path"
+echo -e "${GREEN}=====Тест_10=====${NC}"
+./"$program" << EOF
+$dir_path
+60
+5
+EOF
+echo -e "${GREEN}================${NC}"
+
