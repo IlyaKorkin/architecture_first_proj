@@ -51,11 +51,11 @@ creation() {
         echo "Ошибка: папка '$dir_path' не существует"
         return 1
     fi
-
-for i in $(seq 1 "$count"); do
-    timestamp=$(date +%Y%m%d_%H%M%S_%N)  # С наносекундами
-    echo -e "log\nfile_${timestamp}\n$size" | ./creation_file.sh
-done
+    
+    for i in $(seq 1 "$count"); do
+        timestamp=$(date +%Y%m%d_%H%M%S_%N)  
+        echo -e "$dir_path\nfile_${timestamp}\n$size" | ./creation_file.sh
+    done
 
 
     return 0
@@ -192,3 +192,57 @@ $dir_path
 EOF
 echo -e "${GREEN}================${NC}"
 
+# ===ТЕСТ 11===
+clean_files "$dir_path"
+creation 3 10 "$dir_path"
+echo -e "${GREEN}=====Тест_11=====${NC}"
+./"$program" << EOF
+$dir_path
+85
+10
+EOF
+echo -e "${GREEN}================${NC}"
+
+# ===ТЕСТ 12===
+clean_files "$dir_path"
+creation 15 3 "$dir_path"
+echo -e "${GREEN}=====Тест_12=====${NC}"
+./"$program" << EOF
+$dir_path
+85
+1
+EOF
+echo -e "${GREEN}================${NC}"
+
+# ===ТЕСТ 13===
+clean_files "$dir_path"
+creation 10 10 "$dir_path"
+echo -e "${GREEN}=====Тест_13=====${NC}"
+./"$program" << EOF
+$dir_path
+50
+2
+EOF
+echo -e "${GREEN}================${NC}"
+
+# ===ТЕСТ 14===
+clean_files "$dir_path"
+creation 10 4 "$dir_path"
+echo -e "${GREEN}=====Тест_14=====${NC}"
+./"$program" << EOF
+$dir_path
+75
+2
+EOF
+echo -e "${GREEN}================${NC}"
+
+# ===ТЕСТ 15===
+clean_files "$dir_path"
+creation 10 3 "$dir_path"
+echo -e "${GREEN}=====Тест_15=====${NC}"
+./"$program" << EOF
+$dir_path
+75
+2
+EOF
+echo -e "${GREEN}================${NC}"
